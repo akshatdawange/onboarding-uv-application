@@ -40,11 +40,9 @@ with CurrentLocationInformation:
     col_loc, col_selc = st.columns([0.5, 0.5])
     with col_loc:
         st.header("Current Location Information")
-
-        st.write("Click the button below to share your location to view the UV index of your location")
         
         # location = streamlit_geolocation()
-        if st.button("Click here to view UV and temperature of current location):
+        if st.button("Click here to view UV and temperature of current location"):
             coordinates = get_current_gps_coordinates()
 
             st.write(coordinates)
