@@ -1,0 +1,6 @@
+requests
+streamlit
+streamlit_geolocation
+time
+db
+supabase
