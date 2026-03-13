@@ -43,9 +43,11 @@ with CurrentLocationInformation:
 
         st.write("Click the button below to share your location to view the UV index of your location")
         
-        location = streamlit_geolocation()
+        # location = streamlit_geolocation()
 
         coordinates = get_current_gps_coordinates()
+
+        st.write(coordinates)
     
         if coordinates is not None:
             lat, lon = coordinates
@@ -55,9 +57,9 @@ with CurrentLocationInformation:
             # print("Unable to retrieve your GPS coordinates.")
         
         
-        if location:
-            lat = location["latitude"]
-            lon = location["longitude"]
+        # if location:
+        #     lat = location["latitude"]
+        #     lon = location["longitude"]
 
             # Testing block
             # st.write("Latitude:", lat)
