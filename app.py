@@ -44,6 +44,13 @@ with CurrentLocationInformation:
         # location = streamlit_geolocation()
         if st.button("Click here to view UV and temperature of current location"):
             coordinates = get_current_gps_coordinates()
+            lat, lon = coordinates
+
+            TIMESTAMP = int(time.time())
+            Y_TIMESTAMP = TIMESTAMP - 86400
+            
+            url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
+            history_url = f"https://api.openweathermap.org/data/3.0/onecall/timemachine?lat={lat}&lon={lon}&dt={Y_TIMESTAMP}&appid={API_KEY}"
 
             # st.write(coordinates)
     
@@ -63,15 +70,11 @@ with CurrentLocationInformation:
             # st.write("Latitude:", lat)
             # st.write("Longitude:", lon)
 
-                TIMESTAMP = int(time.time())
-                Y_TIMESTAMP = TIMESTAMP - 86400
 
             #Testing Block
             # st.write(TIMESTAMP)
             
             if lat and lon:
-                url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
-                history_url = f"https://api.openweathermap.org/data/3.0/onecall/timemachine?lat={lat}&lon={lon}&dt={Y_TIMESTAMP}&appid={API_KEY}"
                 
                 response = requests.get(url)
                 response2 = requests.get(history_url)
