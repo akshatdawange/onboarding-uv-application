@@ -3,6 +3,14 @@ import streamlit as st
 from streamlit_geolocation import streamlit_geolocation
 import time
 from db import get_supabase
+import geocoder
+
+def get_current_gps_coordinates():
+    g = geocoder.ip('me')
+    if g.latlng is not None: 
+        return g.latlng
+    else:
+        return None
 
 API_KEY = st.secrets["API_KEY"]
 CITY_NAME = "Melbourne"
@@ -36,6 +44,17 @@ with CurrentLocationInformation:
         st.write("Click the button below to share your location to view the UV index of your location")
         
         location = streamlit_geolocation()
+
+        coordinates = get_current_gps_coordinates()
+    
+        if coordinates is not None:
+            lat, lon = coordinates
+            # print(f"Your current GPS coordinates are:")
+            # print(f"Latitude: {latitude}")
+            # print(f"Longitude: {longitude}")
+        else:
+            # print("Unable to retrieve your GPS coordinates.")
+        
         
         if location:
             lat = location["latitude"]
