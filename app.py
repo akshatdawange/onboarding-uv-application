@@ -44,13 +44,13 @@ with CurrentLocationInformation:
         st.write("Click the button below to share your location to view the UV index of your location")
         
         # location = streamlit_geolocation()
+        if st.button("Click here to view UV and temperature of current location):
+            coordinates = get_current_gps_coordinates()
 
-        coordinates = get_current_gps_coordinates()
-
-        st.write(coordinates)
+            st.write(coordinates)
     
-        if coordinates is not None:
-            lat, lon = coordinates
+            if coordinates is not None:
+                lat, lon = coordinates
             # print(f"Your current GPS coordinates are:")
             # print(f"Latitude: {latitude}")
             # print(f"Longitude: {longitude}")
