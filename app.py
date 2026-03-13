@@ -52,7 +52,6 @@ with CurrentLocationInformation:
             # print(f"Your current GPS coordinates are:")
             # print(f"Latitude: {latitude}")
             # print(f"Longitude: {longitude}")
-        else:
             # print("Unable to retrieve your GPS coordinates.")
         
         
