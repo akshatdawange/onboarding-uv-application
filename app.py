@@ -30,6 +30,9 @@ location_map = {
     f"{row['city']}, {row['country']}": row
     for row in rows_loc
 }
+
+TIMESTAMP = int(time.time())
+Y_TIMESTAMP = TIMESTAMP - 86400
     
 st.title("☀️ Sun Protection Board")
 
@@ -43,8 +46,7 @@ with CurrentLocationInformation:
         
         # location = streamlit_geolocation()
         if st.button("Click here to view UV and temperature of current location"):
-            TIMESTAMP = int(time.time())
-            Y_TIMESTAMP = TIMESTAMP - 86400
+
             coordinates = get_current_gps_coordinates()
             lat, lon = coordinates
             url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
