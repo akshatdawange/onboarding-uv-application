@@ -45,7 +45,7 @@ with CurrentLocationInformation:
         if st.button("Click here to view UV and temperature of current location"):
             coordinates = get_current_gps_coordinates()
 
-            st.write(coordinates)
+            # st.write(coordinates)
     
             if coordinates is not None:
                 lat, lon = coordinates
@@ -63,8 +63,8 @@ with CurrentLocationInformation:
             # st.write("Latitude:", lat)
             # st.write("Longitude:", lon)
 
-            TIMESTAMP = int(time.time())
-            Y_TIMESTAMP = TIMESTAMP - 86400
+                TIMESTAMP = int(time.time())
+                Y_TIMESTAMP = TIMESTAMP - 86400
 
             #Testing Block
             # st.write(TIMESTAMP)
