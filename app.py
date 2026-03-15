@@ -205,7 +205,7 @@ with Statistics:
         grouped,
         x="Age Group",
         y="Count",
-        color="Type"
+        color="Type",
         title="Cancer Cases by Age Group",
         labels={"Age Group": "Age Group", "Count": "Number of Cases"}
     )
