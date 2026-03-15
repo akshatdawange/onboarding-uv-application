@@ -213,3 +213,5 @@ with Statistics:
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
+    st.write("The above graph shows the distribution of different types of cancers across different age groups. The graph is interactive in several ways. You can zoom into the graph to focus on specific data and you can click on any of the legend items to unselect or select it to study 1 of the two classes better.")
