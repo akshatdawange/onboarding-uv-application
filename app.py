@@ -22,7 +22,7 @@ supabase = get_supabase()
 response_loc = supabase.table("loc-data").select("*").execute()
 rows_loc = response_loc.data
 
-response_canc_stat = supbase.table("sun-safety").select("*").execute()
+response_canc_stat = supabase.table("sun-safety").select("*").execute()
 df = pd.DataFrame(response_canc_stat.data)
 
 options = [f"{rows_loc['city']}, {rows_loc['country']}" for rows_loc in rows_loc]
