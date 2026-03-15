@@ -22,7 +22,8 @@ supabase = get_supabase()
 response_loc = supabase.table("loc-data").select("*").execute()
 rows_loc = response_loc.data
 
-stats_data = supabase.table("")
+response_canc_stat = supbase.table("sun-safety").select("*").execute()
+df = pd.DataFrame(response_canc_stat.data)
 
 options = [f"{rows_loc['city']}, {rows_loc['country']}" for rows_loc in rows_loc]
 
@@ -194,4 +195,19 @@ with PreventionMethods:
 
 with Statistics:
 
-    st.write("Yet to be developed")
+    df["Count"] = df["Count"].astype(int)
+
+    df["Age Group"] = df["Age Group"].apply(lambda x: x.replace("‚Äì", " to "))
+
+    grouped = df.groupby(["Type", "Age Group"])["Count"].sum().reset_index()
+
+    fig = px.bar(
+        grouped,
+        x="Age Group",
+        y="Count",
+        color="Type"
+        title="Cancer Cases by Age Group",
+        labels={"Age Group": "Age Group", "Count": "Number of Cases"}
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
