@@ -4,6 +4,7 @@ from streamlit_geolocation import streamlit_geolocation
 import time
 from db import get_supabase
 import geocoder
+import pandas as pd
 
 def get_current_gps_coordinates():
     g = geocoder.ip('me')
