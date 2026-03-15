@@ -5,6 +5,7 @@ import time
 from db import get_supabase
 import geocoder
 import pandas as pd
+import plotly.express as px
 
 def get_current_gps_coordinates():
     g = geocoder.ip('me')
