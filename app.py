@@ -124,10 +124,10 @@ with CurrentLocationInformation:
                 if uvi < 2:
                     st.toast("Low risk of UV harm today!")
                     time.sleep(2)
-                elif uvi > 2 && uvi < 5:
+                elif uvi > 2 and uvi < 5:
                     st.toast("Moderate risk of UV harm today. Stay protected.")
                     time.sleep(2)
-                elif uvi > 5 && uvi < 7:
+                elif uvi > 5 and uvi < 7:
                     st.toast("Higher risk of UV harm today. Use appropriate protection methods.") 
                     time.sleep(2)
                 elif uvi > 8:
