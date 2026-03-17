@@ -6,13 +6,17 @@ from db import get_supabase
 import geocoder
 import pandas as pd
 import plotly.express as px
-
+from streamlit_geolocation import streamlit_geolocation
+location = streamlit_geolocation()
+st.write(location)
 def get_current_gps_coordinates():
     g = geocoder.ip('me')
     if g.latlng is not None: 
         return g.latlng
     else:
         return None
+
+st.stop()
 
 API_KEY = st.secrets["API_KEY"]
 CITY_NAME = "Melbourne"
