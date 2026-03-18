@@ -1,210 +1,46 @@
 import requests
 import streamlit as st
-from streamlit_geolocation import streamlit_geolocation
 import time
-from db import get_supabase
+from db import *
 import geocoder
 import pandas as pd
 import plotly.express as px
+from functions import *
+from currentlocationinformation import *
+from statistics_info import *
+from prevention_info import *
 
-API_KEY = st.secrets["API_KEY"]
-CITY_NAME = "Melbourne"
-COUNTRY_CODE = "AU"
-LIMIT = "5"
+st.set_page_config(
+    page_title="Sun Protection Board",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-supabase = get_supabase()
+# Load the custom CSS
+load_css("styles.css")
 
-response_loc = supabase.table("loc-data").select("*").execute()
-rows_loc = response_loc.data
+# Header Banner
+st.markdown("""
+<div class="hero-card">
+    <div class="main-title">☀️ Sun Protection Board</div>
+    <div class="sub-title">
+        Real-time UV, temperature, and sun safety insights to help users stay protected.
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-response_canc_stat = supabase.table("sun-safety").select("*").execute()
-df = pd.DataFrame(response_canc_stat.data)
+# Tabs which go to different sections
+CurrentLocationInformation, Statistics, PreventionMethods = st.tabs(
+    ["Current Location Information", "Statistics", "Prevention Methods"]
+)
 
-options = [f"{rows_loc['city']}, {rows_loc['country']}" for rows_loc in rows_loc]
-
-location_map = {
-    f"{row['city']}, {row['country']}": row
-    for row in rows_loc
-}
-
-TIMESTAMP = int(time.time())
-Y_TIMESTAMP = TIMESTAMP - 86400
-    
-st.title("☀️ Sun Protection Board")
-
-CurrentLocationInformation, Statistics, PreventionMethods = st.tabs(["Current Location Information", "Statistics", "Prevention Methods"])
-
+# Section 1 : Displaying location based information
 with CurrentLocationInformation:
+    currentlocationinfo()
 
-    col_loc, col_selc = st.columns([0.5, 0.5])
-    with col_loc:
-        st.header("Current Location Information")
-        
-        # location = streamlit_geolocation()
-        if st.button("Click here to view UV and temperature of current location"):
-
-            coordinates = get_current_gps_coordinates()
-            lat, lon = coordinates
-            url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
-            history_url = f"https://api.openweathermap.org/data/3.0/onecall/timemachine?lat={lat}&lon={lon}&dt={Y_TIMESTAMP}&appid={API_KEY}"
-
-            # st.write(coordinates)
-    
-            if coordinates is not None:
-                lat, lon = coordinates
-            # print(f"Your current GPS coordinates are:")
-            # print(f"Latitude: {latitude}")
-            # print(f"Longitude: {longitude}")
-            # print("Unable to retrieve your GPS coordinates.")
-        
-        
-        # if location:
-        #     lat = location["latitude"]
-        #     lon = location["longitude"]
-
-            # Testing block
-            # st.write("Latitude:", lat)
-            # st.write("Longitude:", lon)
-
-
-            #Testing Block
-            # st.write(TIMESTAMP)
-            
-            if lat and lon:
-                
-                response = requests.get(url)
-                response2 = requests.get(history_url)
-
-                data = response.json()
-                y_data = response2.json()
-
-                # st.write(data)
-            
-                current = data["current"]
-                
-                temp_c = current["temp"] - 273.15
-                yesterday_temp_c = y_data["data"][0]["temp"] - 273.15
-
-                uvi = current["uvi"]
-                uvi_yest = y_data["data"][0]["uvi"]
-
-                description = current["weather"][0]["description"]
-
-                delta_temp = temp_c - yesterday_temp_c
-                delta_uvi = uvi - uvi_yest
-
-                if delta_temp > 0:
-                    delta_color_temp1 = "red"
-                else:
-                    delta_color_temp1 = "blue"
-
-                col1, col2, col3 = st.columns([1.7,0.5,1.5])
-
-                col1.metric(
-                    "Current Temperature",
-                    f"{temp_c:.1f} °C",
-                    f"{delta_temp:.1f} °C vs yesterday",
-                    delta_color=delta_color_temp1
-                )
-
-                col3.metric(
-                    "Current UVI",
-                    f"{uvi:.1f}",
-                    f"{delta_uvi:.1f} vs yesterday",
-                    delta_color="inverse"
-                )
-
-                if uvi < 2:
-                    st.toast("Low risk of UV harm today!")
-                    time.sleep(2)
-                elif uvi > 2 and uvi < 5:
-                    st.toast("Moderate risk of UV harm today. Stay protected.")
-                    time.sleep(2)
-                elif uvi > 5 and uvi < 7:
-                    st.toast("Higher risk of UV harm today. Use appropriate protection methods.") 
-                    time.sleep(2)
-                elif uvi > 8:
-                    st.toast("Extreme risk of UV harm. Avoid stepping out in the sun. Use apporpriate protection methods.")
-                    time.sleep(2)
-
-    with col_selc:
-
-        if st.button:
-
-                selected = st.selectbox("Select City", options=options)
-                
-                if selected:
-
-                    lat_selc = location_map[selected]["lat"]
-                    lon_selc = location_map[selected]["lng"]
-
-                    if lat_selc and lon_selc:
-                        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat_selc}&lon={lon_selc}&appid={API_KEY}"
-                        history_url = f"https://api.openweathermap.org/data/3.0/onecall/timemachine?lat={lat_selc}&lon={lon_selc}&dt={Y_TIMESTAMP}&appid={API_KEY}"
-                        
-                        response = requests.get(url)
-                        response2 = requests.get(history_url)
-
-                        data = response.json()
-                        y_data = response2.json()
-
-                    # st.write(data)
-                    
-                        current = data["current"]
-                        
-                        temp_c = current["temp"] - 273.15
-                        yesterday_temp_c = y_data["data"][0]["temp"] - 273.15
-
-                        uvi = current["uvi"]
-                        uvi_yest = y_data["data"][0]["uvi"]
-
-                        description = current["weather"][0]["description"]
-
-                        delta_temp = temp_c - yesterday_temp_c
-                        delta_uvi = uvi - uvi_yest
-
-                        if delta_temp > 0:
-                            delta_color_temp = "red"
-                        else:
-                            delta_color_temp = "blue"
-
-                        col1, col2, col3 = st.columns([1.7,0.5,1.5])
-
-                        col1.metric(
-                            "Current Temperature",
-                            f"{temp_c:.1f} °C",
-                            f"{delta_temp:.1f} °C vs yesterday",
-                            delta_color=delta_color_temp
-                        )
-
-                        col3.metric(
-                            "Current UVI",
-                            f"{uvi:.1f}",
-                            f"{delta_uvi:.1f} vs yesterday",
-                            delta_color="inverse"
-                        )
+# Section 2 : Displaying Statistical Information
+with Statistics:
+    stats()
 
 with PreventionMethods:
-
-    st.write("Yet to be developed")
-
-with Statistics:
-
-    df["Count"] = df["Count"].astype(int)
-
-    df["Age Group"] = df["Age Group"].apply(lambda x: x.replace("‚Äì", " to "))
-
-    grouped = df.groupby(["Type", "Age Group"])["Count"].sum().reset_index()
-
-    fig = px.bar(
-        grouped,
-        x="Age Group",
-        y="Count",
-        color="Type",
-        title="Cancer Cases by Age Group",
-        labels={"Age Group": "Age Group", "Count": "Number of Cases"}
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.write("The above graph shows the distribution of different types of cancers across different age groups. The graph is interactive in several ways. You can zoom into the graph to focus on specific data and you can click on any of the legend items to unselect or select it to study 1 of the two classes better.")
+    prevention_techniques()
