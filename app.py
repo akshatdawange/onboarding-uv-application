@@ -32,8 +32,6 @@ def authenticate_user():
     
 if authenticate_user():
 
-    st.stop()
-
     st.set_page_config(
         page_title="Sun Protection Board",
         layout="wide",
