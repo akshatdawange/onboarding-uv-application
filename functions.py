@@ -9,14 +9,6 @@ def load_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Accessing the user Lat and Long information based on IP Address
-def get_current_gps_coordinates():
-    g = geocoder.ip('me')
-    if g.latlng is not None:
-        return g.latlng
-    else:
-        return None
-
 # Setting the classes of the UV Index levels
 def get_uv_class(uvi):
     if uvi <= 2:

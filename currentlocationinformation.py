@@ -1,6 +1,7 @@
 import streamlit as st
 from functions import *
 from db import *
+from streamlit_geolocation import streamlit_geolocation
 
 def currentlocationinfo():
     mode = st.radio(
@@ -19,16 +20,19 @@ def currentlocationinfo():
                     <div class="panel-title">📍 Current Location Overview</div>
                     <div class="panel-text">
                         Use your device location to get live UV index and temperature
-                        for where you are right now.
+                        for where you are right now. Click on the button below to share
+                        your location.
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
 
-                current_loc_clicked = st.button(
-                    "Use Current Location",
-                    key="current_location_btn",
-                    use_container_width=True
-                )
+                location = streamlit_geolocation()
+
+                # current_loc_clicked = st.button(
+                #     "Use Current Location",
+                #     key="current_location_btn",
+                #     use_container_width=True
+                # )
 
             with right_panel:
                 st.markdown("""
@@ -43,19 +47,20 @@ def currentlocationinfo():
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if current_loc_clicked:
-                coordinates = get_current_gps_coordinates()
+            # if location:
+            #     coordinates = get_current_gps_coordinates()
 
-                if coordinates is not None:
-                    lat, lon = coordinates
+            if location is not None:
+                    lat = location['latitude']
+                    lon = location['longitude']
 
                     if lat and lon:
                         weather_data = fetch_weather_data(lat, lon, API_KEY, Y_TIMESTAMP)
                         st.markdown("### Results for Your Current Location")
                         show_weather_cards(weather_data)
                     else:
-                        st.warning("Unable to retrieve valid coordinates.")
-                else:
+                        st.warning("Unable to retrieve your current location.")
+            else:
                     st.warning("Unable to retrieve your current location.")
 
     elif mode == "Select From List":
